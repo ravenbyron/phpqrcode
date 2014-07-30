@@ -140,7 +140,7 @@ namespace phpQRCode;
                 fclose($handle);
                 return true;
             } catch (Exception $e) {
-                echo 'Exception reçue : ',  $e->getMessage(), "\n";
+                echo 'Exception  : ',  $e->getMessage(), "\n";
             }      
             
         }
