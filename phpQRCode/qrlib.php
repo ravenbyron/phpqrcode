@@ -1,7 +1,6 @@
 <?php
 namespace phpQRCode;
 
-
 /*
  * PHP QR Code encoder
  *
@@ -27,17 +26,17 @@ namespace phpQRCode;
  * License along with this library; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA
  */
-	
-	// Required libs
-	require_once "qrconst.php";
-	require_once "qrconfig.php";
-	require_once "qrtools.php";
-	require_once "qrspec.php";
-	require_once "qrimage.php";
-	require_once "qrvect.php";
-	require_once "qrinput.php";
-	require_once "qrbitstream.php";
-	require_once "qrsplit.php";
-	require_once "qrrscode.php";
-	require_once "qrmask.php";
-	require_once "qrencode.php";
+
+    // Required libs
+    require_once "qrconst.php";
+    require_once "qrconfig.php";
+    require_once "qrtools.php";
+    require_once "qrspec.php";
+    require_once "qrimage.php";
+    require_once "qrvect.php";
+    require_once "qrinput.php";
+    require_once "qrbitstream.php";
+    require_once "qrsplit.php";
+    require_once "qrrscode.php";
+    require_once "qrmask.php";
+    require_once "qrencode.php";

@@ -15,7 +15,7 @@ namespace phpQRCode;
  * The following data / specifications are taken from
  * "Two dimensional symbol -- QR-code -- Basic Specification" (JIS X0510:2004)
  *  or
- * "Automatic identification and data capture techniques -- 
+ * "Automatic identification and data capture techniques --
  *  QR Code 2005 bar code symbology specification" (ISO/IEC 18004:2006)
  *
  * This library is free software; you can redistribute it and/or
@@ -34,7 +34,7 @@ namespace phpQRCode;
  */
 
     require_once "qrlib.php";
- 
+
     define('QRSPEC_VERSION_MAX', 40);
     define('QRSPEC_WIDTH_MAX',   177);
 
@@ -43,8 +43,8 @@ namespace phpQRCode;
     define('QRCAP_REMINDER',     2);
     define('QRCAP_EC',           3);
 
-    class QRspec {
-    
+    class QRspec
+    {
         public static $capacity = array(
             array(  0,    0, 0, array(   0,    0,    0,    0)),
             array( 21,   26, 0, array(   7,   10,   13,   17)), // 1
@@ -88,62 +88,63 @@ namespace phpQRCode;
             array(173, 3532, 0, array( 720, 1316, 1950, 2310)),
             array(177, 3706, 0, array( 750, 1372, 2040, 2430)) //40
         );
-        
+
         //----------------------------------------------------------------------
         public static function getDataLength($version, $level)
         {
             return self::$capacity[$version][QRCAP_WORDS] - self::$capacity[$version][QRCAP_EC][$level];
         }
-        
+
         //----------------------------------------------------------------------
         public static function getECCLength($version, $level)
         {
             return self::$capacity[$version][QRCAP_EC][$level];
         }
-        
+
         //----------------------------------------------------------------------
         public static function getWidth($version)
         {
             return self::$capacity[$version][QRCAP_WIDTH];
         }
-        
+
         //----------------------------------------------------------------------
         public static function getRemainder($version)
         {
             return self::$capacity[$version][QRCAP_REMINDER];
         }
-        
+
         //----------------------------------------------------------------------
         public static function getMinimumVersion($size, $level)
         {
 
-            for($i=1; $i<= QRSPEC_VERSION_MAX; $i++) {
+            for ($i=1; $i<= QRSPEC_VERSION_MAX; $i++) {
                 $words  = self::$capacity[$i][QRCAP_WORDS] - self::$capacity[$i][QRCAP_EC][$level];
-                if($words >= $size) 
+                if($words >= $size)
+
                     return $i;
             }
 
             return -1;
         }
-    
+
         //######################################################################
-        
+
         public static $lengthTableBits = array(
             array(10, 12, 14),
             array( 9, 11, 13),
             array( 8, 16, 16),
             array( 8, 10, 12)
         );
-        
+
         //----------------------------------------------------------------------
         public static function lengthIndicator($mode, $version)
         {
             if ($mode == QR_MODE_STRUCTURE)
                 return 0;
-                
+
             if ($version <= 9) {
                 $l = 0;
-            } else if ($version <= 26) {
+            } elseif ($version <= 26) {
                 $l = 1;
             } else {
                 $l = 2;
@@ -151,16 +152,17 @@ namespace phpQRCode;
 
             return self::$lengthTableBits[$mode][$l];
         }
-        
+
         //----------------------------------------------------------------------
         public static function maximumWords($mode, $version)
         {
-            if($mode == QR_MODE_STRUCTURE) 
+            if($mode == QR_MODE_STRUCTURE)
+
                 return 3;
-                
-            if($version <= 9) {
+
+            if ($version <= 9) {
                 $l = 0;
-            } else if($version <= 26) {
+            } elseif ($version <= 26) {
                 $l = 1;
             } else {
                 $l = 2;
@@ -168,8 +170,8 @@ namespace phpQRCode;
 
             $bits = self::$lengthTableBits[$mode][$l];
             $words = (1 << $bits) - 1;
-            
-            if($mode == QR_MODE_KANJI) {
+
+            if ($mode == QR_MODE_KANJI) {
                 $words *= 2; // the number of bytes is required
             }
 
@@ -222,10 +224,10 @@ namespace phpQRCode;
             array(array( 4, 18), array(13, 32), array(48, 14), array(42, 32)),
             array(array(20,  4), array(40,  7), array(43, 22), array(10, 67)),
             array(array(19,  6), array(18, 31), array(34, 34), array(20, 61)),//40
-        );                                                                       
+        );
 
         //----------------------------------------------------------------------
-        
+
         public static function getEccSpec($version, $level, array &$spec)
         {
             if (count($spec) < 5) {
@@ -237,16 +239,16 @@ namespace phpQRCode;
             $data = self::getDataLength($version, $level);
             $ecc  = self::getECCLength($version, $level);
 
-            if($b2 == 0) {
+            if ($b2 == 0) {
                 $spec[0] = $b1;
-                $spec[1] = (int)($data / $b1);
-                $spec[2] = (int)($ecc / $b1);
-                $spec[3] = 0; 
+                $spec[1] = (int) ($data / $b1);
+                $spec[2] = (int) ($ecc / $b1);
+                $spec[3] = 0;
                 $spec[4] = 0;
             } else {
                 $spec[0] = $b1;
-                $spec[1] = (int)($data / ($b1 + $b2));
-                $spec[2] = (int)($ecc  / ($b1 + $b2));
+                $spec[1] = (int) ($data / ($b1 + $b2));
+                $spec[2] = (int) ($ecc  / ($b1 + $b2));
                 $spec[3] = $b2;
                 $spec[4] = $spec[1] + 1;
             }
@@ -255,13 +257,13 @@ namespace phpQRCode;
         // Alignment pattern ---------------------------------------------------
 
         // Positions of alignment patterns.
-        // This array includes only the second and the third position of the 
-        // alignment patterns. Rest of them can be calculated from the distance 
+        // This array includes only the second and the third position of the
+        // alignment patterns. Rest of them can be calculated from the distance
         // between them.
-         
+
         // See Table 1 in Appendix E (pp.71) of JIS X0510:2004.
-         
-        public static $alignmentPattern = array(      
+
+        public static $alignmentPattern = array(
             array( 0,  0),
             array( 0,  0), array(18,  0), array(22,  0), array(26,  0), array(30,  0), // 1- 5
             array(34,  0), array(22, 38), array(24, 42), array(26, 46), array(28, 50), // 6-10
@@ -271,9 +273,8 @@ namespace phpQRCode;
             array(30, 58), array(34, 62), array(26, 50), array(30, 54), array(26, 52), //26-30
             array(30, 56), array(34, 60), array(30, 58), array(34, 62), array(30, 54), //31-35
             array(24, 50), array(28, 54), array(32, 58), array(26, 54), array(30, 58), //35-40
-        );                                                                                  
+        );
 
-        
         /** --------------------------------------------------------------------
          * Put an alignment marker.
          * @param frame
@@ -288,12 +289,12 @@ namespace phpQRCode;
                 "\xa1\xa0\xa1\xa0\xa1",
                 "\xa1\xa0\xa0\xa0\xa1",
                 "\xa1\xa1\xa1\xa1\xa1"
-            );                        
-            
-            $yStart = $oy-2;         
+            );
+
+            $yStart = $oy-2;
             $xStart = $ox-2;
-            
-            for($y=0; $y<5; $y++) {
+
+            for ($y=0; $y<5; $y++) {
                 QRstr::set($frame, $xStart, $yStart+$y, $finder[$y]);
             }
         }
@@ -302,33 +303,35 @@ namespace phpQRCode;
         public static function putAlignmentPattern($version, &$frame, $width)
         {
             if($version < 2)
+
                 return;
 
             $d = self::$alignmentPattern[$version][1] - self::$alignmentPattern[$version][0];
-            if($d < 0) {
+            if ($d < 0) {
                 $w = 2;
             } else {
-                $w = (int)(($width - self::$alignmentPattern[$version][0]) / $d + 2);
+                $w = (int) (($width - self::$alignmentPattern[$version][0]) / $d + 2);
             }
 
-            if($w * $w - 3 == 1) {
+            if ($w * $w - 3 == 1) {
                 $x = self::$alignmentPattern[$version][0];
                 $y = self::$alignmentPattern[$version][0];
                 self::putAlignmentMarker($frame, $x, $y);
+
                 return;
             }
 
             $cx = self::$alignmentPattern[$version][0];
-            for($x=1; $x<$w - 1; $x++) {
+            for ($x=1; $x<$w - 1; $x++) {
                 self::putAlignmentMarker($frame, 6, $cx);
                 self::putAlignmentMarker($frame, $cx,  6);
                 $cx += $d;
             }
 
             $cy = self::$alignmentPattern[$version][0];
-            for($y=0; $y<$w-1; $y++) {
+            for ($y=0; $y<$w-1; $y++) {
                 $cx = self::$alignmentPattern[$version][0];
-                for($x=0; $x<$w-1; $x++) {
+                for ($x=0; $x<$w-1; $x++) {
                     self::putAlignmentMarker($frame, $cx, $cy);
                     $cx += $d;
                 }
@@ -338,11 +341,11 @@ namespace phpQRCode;
 
         // Version information pattern -----------------------------------------
 
-		// Version information pattern (BCH coded).
+        // Version information pattern (BCH coded).
         // See Table 1 in Appendix D (pp.68) of JIS X0510:2004.
-        
-		// size: [QRSPEC_VERSION_MAX - 6]
-		
+
+        // size: [QRSPEC_VERSION_MAX - 6]
+
         public static $versionPattern = array(
             0x07c94, 0x085bc, 0x09a99, 0x0a4d3, 0x0bbf6, 0x0c762, 0x0d847, 0x0e60d,
             0x0f928, 0x10b78, 0x1145d, 0x12a17, 0x13532, 0x149a6, 0x15683, 0x168c9,
@@ -355,6 +358,7 @@ namespace phpQRCode;
         public static function getVersionPattern($version)
         {
             if($version < 7 || $version > QRSPEC_VERSION_MAX)
+
                 return 0;
 
             return self::$versionPattern[$version -7];
@@ -362,7 +366,7 @@ namespace phpQRCode;
 
         // Format information --------------------------------------------------
         // See calcFormatInfo in tests/test_qrspec.c (orginal qrencode c lib)
-        
+
         public static $formatInfo = array(
             array(0x77c4, 0x72f3, 0x7daa, 0x789d, 0x662f, 0x6318, 0x6c41, 0x6976),
             array(0x5412, 0x5125, 0x5e7c, 0x5b4b, 0x45f9, 0x40ce, 0x4f97, 0x4aa0),
@@ -373,16 +377,18 @@ namespace phpQRCode;
         public static function getFormatInfo($mask, $level)
         {
             if($mask < 0 || $mask > 7)
+
                 return 0;
-                
+
             if($level < 0 || $level > 3)
-                return 0;                
+
+                return 0;
 
             return self::$formatInfo[$level][$mask];
         }
 
         // Frame ---------------------------------------------------------------
-         
+
         public static $frames = array();
 
         /** --------------------------------------------------------------------
@@ -401,9 +407,9 @@ namespace phpQRCode;
                 "\xc1\xc0\xc1\xc1\xc1\xc0\xc1",
                 "\xc1\xc0\xc0\xc0\xc0\xc0\xc1",
                 "\xc1\xc1\xc1\xc1\xc1\xc1\xc1"
-            );                            
-            
-            for($y=0; $y<7; $y++) {
+            );
+
+            for ($y=0; $y<7; $y++) {
                 QRstr::set($frame, $ox, $oy+$y, $finder[$y]);
             }
         }
@@ -419,70 +425,70 @@ namespace phpQRCode;
             self::putFinderPattern($frame, 0, 0);
             self::putFinderPattern($frame, $width - 7, 0);
             self::putFinderPattern($frame, 0, $width - 7);
-            
+
             // Separator
             $yOffset = $width - 7;
-            
-            for($y=0; $y<7; $y++) {
+
+            for ($y=0; $y<7; $y++) {
                 $frame[$y][7] = "\xc0";
                 $frame[$y][$width - 8] = "\xc0";
                 $frame[$yOffset][7] = "\xc0";
                 $yOffset++;
             }
-            
+
             $setPattern = str_repeat("\xc0", 8);
-            
+
             QRstr::set($frame, 0, 7, $setPattern);
             QRstr::set($frame, $width-8, 7, $setPattern);
             QRstr::set($frame, 0, $width - 8, $setPattern);
-        
+
             // Format info
             $setPattern = str_repeat("\x84", 9);
             QRstr::set($frame, 0, 8, $setPattern);
             QRstr::set($frame, $width - 8, 8, $setPattern, 8);
-            
+
             $yOffset = $width - 8;
 
-            for($y=0; $y<8; $y++,$yOffset++) {
+            for ($y=0; $y<8; $y++,$yOffset++) {
                 $frame[$y][8] = "\x84";
                 $frame[$yOffset][8] = "\x84";
             }
 
-            // Timing pattern  
-            
-            for($i=1; $i<$width-15; $i++) {
+            // Timing pattern
+
+            for ($i=1; $i<$width-15; $i++) {
                 $frame[6][7+$i] = chr(0x90 | ($i & 1));
                 $frame[7+$i][6] = chr(0x90 | ($i & 1));
             }
-            
-            // Alignment pattern  
+
+            // Alignment pattern
             self::putAlignmentPattern($version, $frame, $width);
-            
-            // Version information 
-            if($version >= 7) {
+
+            // Version information
+            if ($version >= 7) {
                 $vinf = self::getVersionPattern($version);
 
                 $v = $vinf;
-                
-                for($x=0; $x<6; $x++) {
-                    for($y=0; $y<3; $y++) {
+
+                for ($x=0; $x<6; $x++) {
+                    for ($y=0; $y<3; $y++) {
                         $frame[($width - 11)+$y][$x] = chr(0x88 | ($v & 1));
                         $v = $v >> 1;
                     }
                 }
 
                 $v = $vinf;
-                for($y=0; $y<6; $y++) {
-                    for($x=0; $x<3; $x++) {
+                for ($y=0; $y<6; $y++) {
+                    for ($x=0; $x<3; $x++) {
                         $frame[$y][$x+($width - 11)] = chr(0x88 | ($v & 1));
                         $v = $v >> 1;
                     }
                 }
             }
-    
-            // and a little bit...  
+
+            // and a little bit...
             $frame[$width - 8][8] = "\x81";
-            
+
             return $frame;
         }
 
@@ -490,12 +496,12 @@ namespace phpQRCode;
         public static function debug($frame, $binary_mode = false)
         {
             if ($binary_mode) {
-            
+
                     foreach ($frame as &$frameLine) {
                         $frameLine = join('<span class="m">&nbsp;&nbsp;</span>', explode('0', $frameLine));
                         $frameLine = join('&#9608;&#9608;', explode('1', $frameLine));
                     }
-                    
+
                     ?>
                 <style>
                     .m { background-color: white; }
@@ -504,9 +510,9 @@ namespace phpQRCode;
                     echo '<pre><tt><br/ ><br/ ><br/ >&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;';
                     echo join("<br/ >&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;", $frame);
                     echo '</tt></pre><br/ ><br/ ><br/ ><br/ ><br/ ><br/ >';
-            
+
             } else {
-            
+
                 foreach ($frame as &$frameLine) {
                     $frameLine = join('<span class="m">&nbsp;</span>',  explode("\xc0", $frameLine));
                     $frameLine = join('<span class="m">&#9618;</span>', explode("\xc1", $frameLine));
@@ -522,7 +528,7 @@ namespace phpQRCode;
                     $frameLine = join('&#9830;', explode("\x01", $frameLine));
                     $frameLine = join('&#8901;', explode("\0", $frameLine));
                 }
-                
+
                 ?>
                 <style>
                     .p { background-color: yellow; }
@@ -536,7 +542,7 @@ namespace phpQRCode;
                 echo "<pre><tt>";
                 echo join("<br/ >", $frame);
                 echo "</tt></pre>";
-            
+
             }
         }
 
@@ -545,38 +551,40 @@ namespace phpQRCode;
         {
             return gzcompress(join("\n", $frame), 9);
         }
-        
+
         //----------------------------------------------------------------------
         public static function unserial($code)
         {
             return explode("\n", gzuncompress($code));
         }
-        
+
         //----------------------------------------------------------------------
         public static function newFrame($version)
         {
-            if($version < 1 || $version > QRSPEC_VERSION_MAX) 
+            if($version < 1 || $version > QRSPEC_VERSION_MAX)
+
                 return null;
 
-            if(!isset(self::$frames[$version])) {
+            if (!isset(self::$frames[$version])) {
                 self::$frames[$version] = self::createFrame($version);
             }
-            
+
             if(is_null(self::$frames[$version]))
+
                 return null;
 
             return self::$frames[$version];
         }
 
         //----------------------------------------------------------------------
-        public static function rsBlockNum($spec)     { return $spec[0] + $spec[3]; }
-        public static function rsBlockNum1($spec)    { return $spec[0]; }
-        public static function rsDataCodes1($spec)   { return $spec[1]; }
-        public static function rsEccCodes1($spec)    { return $spec[2]; }
-        public static function rsBlockNum2($spec)    { return $spec[3]; }
-        public static function rsDataCodes2($spec)   { return $spec[4]; }
-        public static function rsEccCodes2($spec)    { return $spec[2]; }
-        public static function rsDataLength($spec)   { return ($spec[0] * $spec[1]) + ($spec[3] * $spec[4]);    }
-        public static function rsEccLength($spec)    { return ($spec[0] + $spec[3]) * $spec[2]; }
-        
+        public static function rsBlockNum($spec) { return $spec[0] + $spec[3]; }
+        public static function rsBlockNum1($spec) { return $spec[0]; }
+        public static function rsDataCodes1($spec) { return $spec[1]; }
+        public static function rsEccCodes1($spec) { return $spec[2]; }
+        public static function rsBlockNum2($spec) { return $spec[3]; }
+        public static function rsDataCodes2($spec) { return $spec[4]; }
+        public static function rsEccCodes2($spec) { return $spec[2]; }
+        public static function rsDataLength($spec) { return ($spec[0] * $spec[1]) + ($spec[3] * $spec[4]);    }
+        public static function rsEccLength($spec) { return ($spec[0] + $spec[3]) * $spec[2]; }
+
     }
