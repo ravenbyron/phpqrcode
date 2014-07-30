@@ -510,7 +510,6 @@ namespace phpQRCode;
                 ob_end_clean();
                 
                 if ($err != '')
-                    QRtools::log($outfile, $err);
                 
                 $maxSize = (int)(QR_PNG_MAXIMUM_SIZE / (count($tab)+2*$this->margin));
                 
@@ -518,7 +517,6 @@ namespace phpQRCode;
             
             } catch (Exception $e) {
             
-                QRtools::log($outfile, $e->getMessage());
             
             }
         }
@@ -534,7 +532,6 @@ namespace phpQRCode;
                 ob_end_clean();
                 
                 if ($err != '')
-                    QRtools::log($outfile, $err);
                 
                 $maxSize = (int)(QR_PNG_MAXIMUM_SIZE / (count($tab)+2*$this->margin));
                 
@@ -542,7 +539,6 @@ namespace phpQRCode;
             
             } catch (Exception $e) {
             
-                QRtools::log($outfile, $e->getMessage());
             
             }
         }
@@ -558,7 +554,6 @@ namespace phpQRCode;
                 ob_end_clean();
                 
                 if ($err != '')
-                    QRtools::log($outfile, $err);
                 
                 $maxSize = (int)(QR_PNG_MAXIMUM_SIZE / (count($tab)+2*$this->margin));
 
@@ -566,7 +561,6 @@ namespace phpQRCode;
             
             } catch (Exception $e) {
             
-                QRtools::log($outfile, $e->getMessage());
             
             }
         }

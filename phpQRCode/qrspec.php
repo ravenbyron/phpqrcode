@@ -225,7 +225,6 @@ namespace phpQRCode;
         );                                                                       
 
         //----------------------------------------------------------------------
-        // CACHEABLE!!!
         
         public static function getEccSpec($version, $level, array &$spec)
         {
@@ -383,7 +382,6 @@ namespace phpQRCode;
         }
 
         // Frame ---------------------------------------------------------------
-        // Cache of initial frames.
          
         public static $frames = array();
 
@@ -561,19 +559,7 @@ namespace phpQRCode;
                 return null;
 
             if(!isset(self::$frames[$version])) {
-                
-                $fileName = QR_CACHE_DIR.'frame_'.$version.'.dat';
-                
-                if (QR_CACHEABLE) {
-                    if (file_exists($fileName)) {
-                        self::$frames[$version] = self::unserial(file_get_contents($fileName));
-                    } else {
-                        self::$frames[$version] = self::createFrame($version);
-                        file_put_contents($fileName, self::serial(self::$frames[$version]));
-                    }
-                } else {
-                    self::$frames[$version] = self::createFrame($version);
-                }
+            	self::$frames[$version] = self::createFrame($version);
             }
             
             if(is_null(self::$frames[$version]))

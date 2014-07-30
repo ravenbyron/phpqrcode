@@ -73,48 +73,7 @@ namespace phpQRCode;
             return $barcode_array;
         }
         
-        //----------------------------------------------------------------------
-        public static function clearCache()
-        {
-            self::$frames = array();
-        }
-        
-        //----------------------------------------------------------------------
-        public static function buildCache()
-        {
-			QRtools::markTime('before_build_cache');
-			
-			$mask = new QRmask();
-            for ($a=1; $a <= QRSPEC_VERSION_MAX; $a++) {
-                $frame = QRspec::newFrame($a);
-                if (QR_IMAGE) {
-                    $fileName = QR_CACHE_DIR.'frame_'.$a.'.png';
-                    QRimage::png(self::binarize($frame), $fileName, 1, 0);
-                }
-				
-				$width = count($frame);
-				$bitMask = array_fill(0, $width, array_fill(0, $width, 0));
-				for ($maskNo=0; $maskNo<8; $maskNo++)
-					$mask->makeMaskNo($maskNo, $width, $frame, $bitMask, true);
-            }
-			
-			QRtools::markTime('after_build_cache');
-        }
 
-        //----------------------------------------------------------------------
-        public static function log($outfile, $err)
-        {
-            if (QR_LOG_DIR !== false) {
-                if ($err != '') {
-                    if ($outfile !== false) {
-                        file_put_contents(QR_LOG_DIR.basename($outfile).'-errors.txt', date('Y-m-d H:i:s').': '.$err, FILE_APPEND);
-                    } else {
-                        file_put_contents(QR_LOG_DIR.'errors.txt', date('Y-m-d H:i:s').': '.$err, FILE_APPEND);
-                    }
-                }    
-            }
-        }
-        
         //----------------------------------------------------------------------
         public static function dumpMask($frame) 
         {
@@ -166,19 +125,6 @@ namespace phpQRCode;
                 <tr style="border-top:2px solid black"><th style="text-align:right">TOTAL: </th><td>'.number_format($lastTime-$startTime, 6).'s</td></tr>
             </tfoot>
             </table>';
-        }
-        
-        public static function save($content, $filename_path)
-        {           
-            try {
-                $handle = fopen($filename_path, "w");
-                fwrite($handle, $content);
-                fclose($handle);
-                return true;
-            } catch (Exception $e) {
-                echo 'Exception reçue : ',  $e->getMessage(), "\n";
-            }      
-            
         }
         
     }
