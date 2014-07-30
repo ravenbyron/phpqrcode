@@ -305,10 +305,10 @@ namespace phpQRCode;
         }
         
         //----------------------------------------------------------------------
-        public static function svg($text, $outfile = false, $level = QR_ECLEVEL_L, $size = 3, $margin = 4, $saveandprint=false, $back_color = 0xFFFFFF, $fore_color = 0x000000)
+        public static function svg($text, $outfile = false, $level = QR_ECLEVEL_L, $size = 3, $margin = 4, $saveandprint=false, $back_color = 0xFFFFFF, $fore_color = 0x000000,$returnandembed=false)
         {
             $enc = QRencode::factory($level, $size, $margin, $back_color, $fore_color);
-            return $enc->encodeSVG($text, $outfile, $saveandprint=false);
+            return $enc->encodeSVG($text, $outfile, $saveandprint, $returnandembed);
         }
 
         //----------------------------------------------------------------------
@@ -548,7 +548,7 @@ namespace phpQRCode;
         }
 
         //----------------------------------------------------------------------
-        public function encodeSVG($intext, $outfile = false,$saveandprint=false) 
+        public function encodeSVG($intext, $outfile = false,$saveandprint = false, $returnandembed = false) 
         {
             try {
             
@@ -562,7 +562,7 @@ namespace phpQRCode;
                 
                 $maxSize = (int)(QR_PNG_MAXIMUM_SIZE / (count($tab)+2*$this->margin));
 
-                QRvect::svg($tab, $outfile, min(max(1, $this->size), $maxSize), $this->margin,$saveandprint, $this->back_color, $this->fore_color);
+                QRvect::svg($tab, $outfile, min(max(1, $this->size), $maxSize), $this->margin,$saveandprint, $this->back_color, $this->fore_color, $returnandembed = false);
             
             } catch (Exception $e) {
             
