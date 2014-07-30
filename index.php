@@ -24,7 +24,7 @@
     
     echo "<h1>PHP QR Code</h1><hr/>";
     
-    include "phpQRCode/qrlib.php";    
+    include "phpQRCode/qrinit.php";    
     
     //processing form input
     //remember to sanitize user input in real-life solution !!!
