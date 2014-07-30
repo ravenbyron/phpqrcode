@@ -147,7 +147,8 @@ namespace phpQRCode;
             $b = 0;
             $bitMask = array();
 
-			$bitMask = $this->generateMaskNo($maskNo, $width, $s, $d);
+
+            $bitMask = $this->generateMaskNo($maskNo, $width, $s, $d);
 
             if ($maskGenOnly)
                 return;

@@ -559,7 +559,7 @@ namespace phpQRCode;
                 return null;
 
             if(!isset(self::$frames[$version])) {
-            	self::$frames[$version] = self::createFrame($version);
+                self::$frames[$version] = self::createFrame($version);
             }
             
             if(is_null(self::$frames[$version]))

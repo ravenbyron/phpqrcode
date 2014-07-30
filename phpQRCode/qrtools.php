@@ -73,7 +73,12 @@ namespace phpQRCode;
             return $barcode_array;
         }
         
-
+        //----------------------------------------------------------------------
+        public static function clearCache()
+        {
+            self::$frames = array();
+        }
+        
         //----------------------------------------------------------------------
         public static function dumpMask($frame) 
         {
@@ -125,6 +130,19 @@ namespace phpQRCode;
                 <tr style="border-top:2px solid black"><th style="text-align:right">TOTAL: </th><td>'.number_format($lastTime-$startTime, 6).'s</td></tr>
             </tfoot>
             </table>';
+        }
+        
+        public static function save($content, $filename_path)
+        {           
+            try {
+                $handle = fopen($filename_path, "w");
+                fwrite($handle, $content);
+                fclose($handle);
+                return true;
+            } catch (Exception $e) {
+                echo 'Exception reçue : ',  $e->getMessage(), "\n";
+            }      
+            
         }
         
     }
