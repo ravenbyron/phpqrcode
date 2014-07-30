@@ -509,17 +509,13 @@ namespace phpQRCode;
                 $err = ob_get_contents();
                 ob_end_clean();
                 
-                if ($err != '')
-                    QRtools::log($outfile, $err);
                 
                 $maxSize = (int)(QR_PNG_MAXIMUM_SIZE / (count($tab)+2*$this->margin));
                 
                 QRimage::png($tab, $outfile, min(max(1, $this->size), $maxSize), $this->margin,$saveandprint, $this->back_color, $this->fore_color);
             
             } catch (Exception $e) {
-            
-                QRtools::log($outfile, $e->getMessage());
-            
+            	//nothing
             }
         }
         
@@ -533,17 +529,13 @@ namespace phpQRCode;
                 $err = ob_get_contents();
                 ob_end_clean();
                 
-                if ($err != '')
-                    QRtools::log($outfile, $err);
                 
                 $maxSize = (int)(QR_PNG_MAXIMUM_SIZE / (count($tab)+2*$this->margin));
                 
                 QRvect::eps($tab, $outfile, min(max(1, $this->size), $maxSize), $this->margin,$saveandprint, $this->back_color, $this->fore_color, $this->cmyk);
             
             } catch (Exception $e) {
-            
-                QRtools::log($outfile, $e->getMessage());
-            
+            	//nothing
             }
         }
 
@@ -557,17 +549,13 @@ namespace phpQRCode;
                 $err = ob_get_contents();
                 ob_end_clean();
                 
-                if ($err != '')
-                    QRtools::log($outfile, $err);
                 
                 $maxSize = (int)(QR_PNG_MAXIMUM_SIZE / (count($tab)+2*$this->margin));
 
                 return QRvect::svg($tab, $outfile, min(max(1, $this->size), $maxSize), $this->margin,$saveandprint, $this->back_color, $this->fore_color, $returnandembed );
             
             } catch (Exception $e) {
-            
-                QRtools::log($outfile, $e->getMessage());
-            
+            	//nothing
             }
         }
     }

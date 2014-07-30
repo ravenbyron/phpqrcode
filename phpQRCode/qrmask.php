@@ -147,20 +147,8 @@ namespace phpQRCode;
             $b = 0;
             $bitMask = array();
 
-            $fileName = QR_CACHE_DIR.'mask_'.$maskNo.DIRECTORY_SEPARATOR.'mask_'.$width.'_'.$maskNo.'.dat';
 
-            if (QR_CACHEABLE) {
-                if (file_exists($fileName)) {
-                    $bitMask = self::unserial(file_get_contents($fileName));
-                } else {
-                    $bitMask = $this->generateMaskNo($maskNo, $width, $s, $d);
-                    if (!file_exists(QR_CACHE_DIR.'mask_'.$maskNo))
-                        mkdir(QR_CACHE_DIR.'mask_'.$maskNo);
-                    file_put_contents($fileName, self::serial($bitMask));
-                }
-            } else {
-                $bitMask = $this->generateMaskNo($maskNo, $width, $s, $d);
-            }
+            $bitMask = $this->generateMaskNo($maskNo, $width, $s, $d);
 
             if ($maskGenOnly)
                 return;
